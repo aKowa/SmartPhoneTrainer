@@ -21,7 +21,6 @@ public class CircleController : MonoBehaviour
 		Score = " mal geschafft",
 		Record = "Rekord: ";
 	private RectTransform rect;
-	private Color initFeedbackColor;
 	private int currentScore = 0;
 
 	private void Awake ()
@@ -30,7 +29,6 @@ public class CircleController : MonoBehaviour
 		initSize = rect.sizeDelta;
 		initPosition = rect.localPosition;
 		this.Feedback.text = "";
-		this.initFeedbackColor = this.Feedback.color;
 
 		ScoreText.text = "0" + Score;
 

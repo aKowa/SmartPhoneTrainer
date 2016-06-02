@@ -66,6 +66,8 @@
     <Compile Include="Assets\Scripts\CircleController.cs" />
     <Compile Include="Assets\Scripts\ExtensionMethods.cs" />
     <Compile Include="Assets\Scripts\RandomPoint.cs" />
+    <Compile Include="Assets\Scripts\Test.cs" />
+    <Compile Include="Assets\Scripts\TestInspector.cs" />
     <Compile Include="Assets\Scripts\WelcomeScreenController.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
