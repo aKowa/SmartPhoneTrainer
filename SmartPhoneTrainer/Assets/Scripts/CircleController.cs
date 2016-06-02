@@ -4,12 +4,12 @@ using UnityEngine.UI;
 
 public class CircleController : MonoBehaviour
 {
-	public RectTransform SpawnRect;
+	public Rect SpawnRect;
 	public Text ScoreText;
 	public Text RecordText;
 	public bool ResetPlayerPrefs = false;
-	public float Decrease = 5f;
-	public float MinSize = 10f;
+	public float Decrease = 0.2f;
+	public float MinSize = 0.1f;
 	public float TextWaitToFadeTime = 1f;
 	public float TextFadeTime = 1f;
 	private Vector2 initSize;
@@ -20,14 +20,12 @@ public class CircleController : MonoBehaviour
 		Outside = "Außerhalb des Kreises.",
 		Score = " mal geschafft",
 		Record = "Rekord: ";
-	private RectTransform rect;
 	private int currentScore = 0;
 
 	private void Awake ()
 	{
-		rect = GetComponent<RectTransform>();
-		initSize = rect.sizeDelta;
-		initPosition = rect.localPosition;
+		this.initPosition = this.transform.localPosition;
+		this.initSize = this.transform.localScale;
 		this.Feedback.text = "";
 
 		ScoreText.text = "0" + Score;
@@ -64,8 +62,9 @@ public class CircleController : MonoBehaviour
 
 		if (touch.phase == TouchPhase.Began)
 		{
-			var distance = Vector2.Distance(touch.position, this.transform.position);
-			if (distance - rect.rect.height/2 < 0)
+			var touchPoint = Camera.main.ScreenToWorldPoint(touch.position);
+			var distance = Vector2.Distance(touchPoint, this.transform.position);
+			if (distance - this.transform.localScale.x/2 < 0)
 			{
 				SetScore();
 				DecreaseSize ();
@@ -98,26 +97,22 @@ public class CircleController : MonoBehaviour
 
 	private void Reposition()
 	{
-		var offset = new Vector2( this.rect.rect.width / 2, this.rect.rect.height / 2 );
-		this.transform.position = SpawnRect.rect.GetInRectangle( offset ) + (Vector2)SpawnRect.position;
+		var offset = this.transform.localScale.x / 2;
+		this.transform.position = SpawnRect.GetInRectangle( new Vector2(offset, offset) ) + (Vector2)SpawnRect.position;
 	}
 
 	private void DecreaseSize()
 	{
-		var h = rect.sizeDelta.x - Decrease;
-		var w = rect.sizeDelta.y - Decrease;
-		h = Mathf.Clamp ( h, MinSize, 100f ); 
-		w = Mathf.Clamp ( w, MinSize, 100f );
-
-		rect.sizeDelta = new Vector2(h, w);
+		var scale = this.transform.localScale.x - Decrease;
+		this.transform.localScale = new Vector3(scale, scale, scale);
 	}
 
 	private void Reset()
 	{
 		currentScore = 0;
 		ScoreText.text = currentScore + Score;
-		this.rect.localPosition = initPosition;
-		this.rect.sizeDelta = initSize;
+		this.transform.localPosition = initPosition;
+		this.transform.localScale = initSize;
 	}
 
 	private IEnumerator FadeOutText(string s)
